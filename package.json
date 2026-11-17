@@ -1,0 +1,31 @@
+{
+  "name": "lang-chain-implementation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --env-file .env --inspect --watch src/index.ts",
+    "test:dev": "node --env-file .env --inspect --watch --test ./test",
+    "test": "node --env-file .env  --test ./test",
+    "langgraph:serve": "npx @langchain/langgraph-cli@latest dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabrantoniette/lang-chain-implementation.git"
+  },
+  "keywords": [],
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/gabrantoniette/lang-chain-implementation/issues"
+  },
+  "homepage": "https://github.com/gabrantoniette/lang-chain-implementation#readme",
+  "dependencies": {
+    "@langchain/anthropic": "^1.6.5",
+    "@langchain/core": "^1.4.1",
+    "@langchain/langgraph": "^1.7.5",
+    "@types/node": "^24.19.2",
+    "fastify": "^5.7.4",
+    "langchain": "^1.6.6",
+    "zod": "^4.6.7"
+  }
+}
