@@ -22,7 +22,7 @@ export const createServer = ( ) => {
         try {
             const { question } = request.body as { question: string }
             const response = await graph.invoke({
-                message: [new HumanMessage(question)]
+                messages: [new HumanMessage(question)]
             })
 
             return reply.send(response.output)
