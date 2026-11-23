@@ -1,22 +1,18 @@
 import {
     StateGraph,
-    MessagesZodMeta,
     START,
     END,
+    MessagesZodState,
 } from '@langchain/langgraph'
-import { withLangGraph } from '@langchain/langgraph/zod'
-import { z } from 'zod'
-import { BaseMessage } from 'langchain'
+import { z } from 'zod/v3'
+import { identifyIntent } from './nodes/identifyIntentNodes.ts'
+import { chatResponseNode } from './nodes/chatResponseNode.ts'
 
 
-const GraphState = z.object({
-    message: withLangGraph(
-        z.custom<BaseMessage[]>(),
-        MessagesZodMeta
-    ),
-    output: z.string(),
-    command: z.enum(['uppercase', 'lowercase', 'unknown']),
-}) 
+const GraphState = MessagesZodState.extend({
+    output: z.string().default(''),
+    command: z.enum(['uppercase', 'lowercase', 'unknown']).default('unknown'),
+})
 
 export type GraphState = z.infer<typeof GraphState>
 
@@ -25,16 +21,20 @@ export function buildGraph() {
         stateSchema: GraphState
     })
 
-    .addNode("IdentifyCommand", (state: GraphState) => {
+    .addNode("Identify Intent", identifyIntent)
+    .addNode("Chat Response", chatResponseNode)
 
-        return {
-            ...state,
-            output: "test",
-        }
-    })
+    // .addNode("IdentifyCommand", (state: GraphState) => {
 
-    .addEdge(START, "IdentifyCommand")
-    .addEdge("IdentifyCommand", END)
+    //     return {
+    //         ...state,
+    //         output: "",
+    //     }
+    // })
+
+    .addEdge(START, "Identify Intent")
+    .addEdge("Identify Intent", "Chat Response")
+    .addEdge("Chat Response", END)
 
     return workflow.compile()
 }
