@@ -1,7 +1,7 @@
 {
   "name": "lang-chain-implementation",
   "version": "1.0.0",
-  "description": "",
+  "description": "Fastify chat endpoint backed by a LangGraph.js state graph with intent routing",
   "main": "index.js",
   "scripts": {
     "dev": "node --env-file .env --inspect --watch src/index.ts",
@@ -13,7 +13,16 @@
     "type": "git",
     "url": "git+https://github.com/gabrantoniette/lang-chain-implementation.git"
   },
-  "keywords": [],
+  "keywords": [
+    "langgraph",
+    "langchain",
+    "fastify",
+    "typescript",
+    "state-graph",
+    "langsmith"
+  ],
+  "author": "Gabriel Antoniette",
+  "license": "MIT",
   "type": "module",
   "bugs": {
     "url": "https://github.com/gabrantoniette/lang-chain-implementation/issues"
