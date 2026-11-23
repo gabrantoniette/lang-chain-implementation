@@ -7,6 +7,9 @@ import {
 import { z } from 'zod/v3'
 import { identifyIntent } from './nodes/identifyIntentNodes.ts'
 import { chatResponseNode } from './nodes/chatResponseNode.ts'
+import { lowerCaseNode } from './nodes/lowerCase.ts'
+import { upperCaseNode } from './nodes/upperCase.ts'
+import { fallbackNode } from './nodes/fallBack.ts'
 
 
 const GraphState = MessagesZodState.extend({
@@ -21,20 +24,37 @@ export function buildGraph() {
         stateSchema: GraphState
     })
 
-    .addNode("Identify Intent", identifyIntent)
-    .addNode("Chat Response", chatResponseNode)
+    .addNode("identifyIntent", identifyIntent)
+    .addNode("chatResponse", chatResponseNode)
 
-    // .addNode("IdentifyCommand", (state: GraphState) => {
+    .addNode('uppercase', upperCaseNode)
+    .addNode('lowercase', lowerCaseNode)
+    .addNode('fallback', fallbackNode)
 
-    //     return {
-    //         ...state,
-    //         output: "",
-    //     }
-    // })
+    .addEdge(START, "identifyIntent")
+    .addConditionalEdges(
+        "identifyIntent",
+        (state: GraphState) => {
+            switch(state.command) {
+                case 'uppercase':
+                    return 'uppercase';
+                case 'lowercase':
+                    return 'lowercase';
+                default:
+                    return 'fallback'
+            }
+        },
+        {
+            'uppercase': 'uppercase',
+            'lowercase': 'lowercase',
+            'fallback': 'fallback',
+        }
+    )
+    .addEdge("uppercase", "chatResponse")
+    .addEdge("lowercase", "chatResponse")
+    .addEdge("fallback", "chatResponse")
 
-    .addEdge(START, "Identify Intent")
-    .addEdge("Identify Intent", "Chat Response")
-    .addEdge("Chat Response", END)
+    .addEdge("chatResponse", END)
 
     return workflow.compile()
 }
